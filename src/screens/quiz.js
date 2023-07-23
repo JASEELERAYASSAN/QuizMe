@@ -75,73 +75,68 @@ export default function Quiz({ navigation }) {
 
     return (
         <View style={styles.container}>
-            <ImageBackground
-                source={require('../assets/bg.png')}
-                style={styles.backgroundImage}
-            >
-                {isLoading ? (
-                    <View style={styles.spinningView}>
-                        <SkypeIndicator color='#525FE1' size={50} />
+            {isLoading ? (
+                <View style={styles.spinningView}>
+                    <SkypeIndicator color='#5C8984' size={50} />
+                </View>
+            ) : questions && (
+                <View style={styles.quizContainerView}>
+                    <View style={styles.quizView}>
+                        <Text style={styles.question}>
+                            Q - {decodeURIComponent(questions[ques].question)}
+                        </Text>
                     </View>
-                ) : questions && (
-                    <View style={styles.quizContainerView}>
-                        <View style={styles.quizView}>
-                            <Text style={styles.question}>
-                                Q. {decodeURIComponent(questions[ques].question)}
+                    <View style={styles.optContainerView}>
+                        <TouchableOpacity
+                            style={styles.optionButtom}
+                            onPress={() => handlSelectedOption(options[0])}>
+                            <Text style={styles.option}>
+                                {decodeURIComponent(options[0])}
                             </Text>
-                        </View>
-                        <View style={styles.optContainerView}>
-                            <TouchableOpacity
-                                style={styles.optionButtom}
-                                onPress={() => handlSelectedOption(options[0])}>
-                                <Text style={styles.option}>
-                                    {decodeURIComponent(options[0])}
-                                </Text>
-                            </TouchableOpacity>
-                            <TouchableOpacity
-                                style={styles.optionButtom}
-                                onPress={() => handlSelectedOption(options[1])}
-                            >
-                                <Text style={styles.option}>
-                                    {decodeURIComponent(options[1])}
-                                </Text>
-                            </TouchableOpacity>
-                            <TouchableOpacity
-                                style={styles.optionButtom}
-                                onPress={() => handlSelectedOption(options[2])}
-                            >
-                                <Text style={styles.option}>
-                                    {decodeURIComponent(options[2])}
-                                </Text>
-                            </TouchableOpacity>
-                            <TouchableOpacity
-                                style={styles.optionButtom}
-                                onPress={() => handlSelectedOption(options[3])}
-                            >
-                                <Text style={styles.option}>
-                                    {decodeURIComponent(options[3])}
-                                </Text>
-                            </TouchableOpacity>
-                        </View>
-                        <View style={styles.buttonContainerView}>
-                            {ques !== 9 && (
-                                <TouchableOpacity
-                                    style={styles.button}
-                                    onPress={handleNextPress}>
-                                    <Text style={styles.buttonText}>SKIP</Text>
-                                </TouchableOpacity>
-                            )}
-                            {ques === 9 && (
-                                <TouchableOpacity
-                                    style={styles.button}
-                                    onPress={handleShowResult}>
-                                    <Text style={styles.buttonText}>SHOW RESULTS</Text>
-                                </TouchableOpacity>
-                            )}
-                        </View>
+                        </TouchableOpacity>
+                        <TouchableOpacity
+                            style={styles.optionButtom}
+                            onPress={() => handlSelectedOption(options[1])}
+                        >
+                            <Text style={styles.option}>
+                                {decodeURIComponent(options[1])}
+                            </Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity
+                            style={styles.optionButtom}
+                            onPress={() => handlSelectedOption(options[2])}
+                        >
+                            <Text style={styles.option}>
+                                {decodeURIComponent(options[2])}
+                            </Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity
+                            style={styles.optionButtom}
+                            onPress={() => handlSelectedOption(options[3])}
+                        >
+                            <Text style={styles.option}>
+                                {decodeURIComponent(options[3])}
+                            </Text>
+                        </TouchableOpacity>
                     </View>
-                )}
-            </ImageBackground>
+                    <View style={styles.buttonContainerView}>
+                        {ques !== 9 && (
+                            <TouchableOpacity
+                                style={styles.button}
+                                onPress={handleNextPress}>
+                                <Text style={styles.buttonText}>SKIP</Text>
+                            </TouchableOpacity>
+                        )}
+                        {ques === 9 && (
+                            <TouchableOpacity
+                                style={styles.button}
+                                onPress={handleShowResult}>
+                                <Text style={styles.buttonText}>SHOW RESULTS</Text>
+                            </TouchableOpacity>
+                        )}
+                    </View>
+                </View>
+            )}
         </View>
     );
 };
@@ -150,7 +145,8 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         justifyContent: 'center',
-        alignItems: 'center'
+        alignItems: 'center',
+        backgroundColor:'#EEE2DE'
     },
     backgroundImage: {
         height: '100%',
@@ -171,25 +167,28 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
     },
     quizView: {
-        height: hp('15'),
+        minHeight: hp('10'),
         width: wp('90'),
         alignItems: 'center',
         justifyContent: 'center',
+        backgroundColor:'#5C8984',
+        borderRadius:wp('2'),
+        marginTop: hp('10'),
     },
     optContainerView: {
-        marginTop: hp('5'),
-        height: hp('35'),
+        marginTop: hp('10'),
+        height: hp('25'),
         width: wp('90'),
     },
     buttonContainerView: {
         justifyContent: 'space-between',
         flexDirection: 'row',
-        height: hp('20'),
+        height: hp('30'),
         width: wp('90'),
         alignItems: 'flex-end'
     },
     button: {
-        backgroundColor: '#000',
+        backgroundColor: '#5C8984',
         alignItems: 'center',
         height: hp('5'),
         width: wp('40'),
@@ -197,19 +196,20 @@ const styles = StyleSheet.create({
     },
     buttonText: {
         fontSize: hp('2'),
-        fontWeight: 'bold',
-        color: 'white',
+        fontFamily: 'Roboto-Bold',        
+        color: '#fff',
         marginTop: hp('1')
     },
     question: {
         fontSize: hp('2'),
-        fontWeight: 'bold',
-        color: '#525FE1'
+        fontFamily: 'Roboto-Bold',
+        color: '#fff',
+        margin:hp('2')
     },
     option: {
         fontSize: hp('2'),
-        fontWeight: 'bold',
-        color: 'white',
+        fontFamily: 'Roboto-Bold',
+        color: '#27374D',
         textAlign: 'center',
         marginTop: hp('1.25')
     },
@@ -217,9 +217,7 @@ const styles = StyleSheet.create({
         minHeight: hp('5'),
         width: wp('90'),
         borderRadius: wp('2'),
-        backgroundColor: '#525FE1',
-        marginTop: hp('2')
+        backgroundColor: '#9DB2BF',
+        marginTop: hp('1')
     },
-
-
 })
