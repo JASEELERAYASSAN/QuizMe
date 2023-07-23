@@ -1,28 +1,21 @@
 import React from 'react'
 import { View, Text, StyleSheet, ImageBackground, Image, TouchableOpacity } from 'react-native'
+import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen'
 
-export default function Home() {
+export default function Home({ navigation }) {
     return (
         <View style={styles.container}>
-            <ImageBackground source={require('../assets/bg.png')}
+            <ImageBackground source={{ uri: 'https://img.freepik.com/free-vector/thoughtful-woman-with-laptop-looking-big-question-mark_1150-39362.jpg' }}
                 style={styles.backgroundImage}>
-                <View style={styles.container}>
-                    <Text style={styles.title}>Computer Quiz</Text>
+                <View style={styles.headerTextView}>
+                    <Text style={styles.headerText}>QUIZ ME</Text>
                 </View>
-                <View style={styles.bannerContainer}>
-                    <Image
-                        source={{
-                            uri: 'https://cdni.iconscout.com/illustration/premium/thumb/online-test-5727897-4788138.png',
-                        }}
-                        style={styles.banner}
-                        resizeMode="contain"
-                    />
-                </View>
-                <TouchableOpacity
-                    onPress={() => navigation.navigate('QuizScreen')}
-                    style={styles.button}>
-                    <Text style={styles.buttonText}>Start</Text>
+                <View style={styles.buttonView}>
+                <TouchableOpacity onPress={() => navigation.navigate('Quiz')}
+                    style={styles.buttonContainerView}>
+                    <Text style={styles.buttonText}>START QUIZ</Text>
                 </TouchableOpacity>
+                </View>
             </ImageBackground>
         </View>
     )
@@ -30,42 +23,45 @@ export default function Home() {
 
 const styles = StyleSheet.create({
     container: {
-        alignItems: 'center',
-        justifyContent: 'center'
-    },
-    banner: {
-        height: 400,
-        width: 400,
-    },
-    bannerContainer: {
+        flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
-        flex: 1,
-    },
-    title: {
-        fontSize: 30,
-        fontWeight: '600',
-        color: '#1e8a2e',
-        paddingTop: 40,
-        paddingHorizontal: 20,
-    },
-    button: {
-        width: '90%',
-        backgroundColor: '#a820e3',
-        padding: 10,
-        borderRadius: 10,
-        alignItems: 'center',
-        marginBottom: 30,
-    },
-    buttonText: {
-        fontSize: 24,
-        fontWeight: '500',
-        color: 'white',
+       
     },
     backgroundImage: {
-        height: '100%',
-        width: '100%',
+        height: hp('100'),
+        width: wp('100'),
+        resizeMode:'contain'
+    },
+    headerTextView: {
+        marginTop:hp('8.5'),
+        justifyContent: 'center',
         alignItems: 'center',
-        justifyContent: 'center'
+    },
+    headerText: {
+        fontSize: hp('2.5'),
+        fontWeight: 'bold',
+        color: '#213363',
+        letterSpacing:hp('.2')
+    },
+    buttonView:{
+        flex:1,
+        justifyContent:'flex-end',
+        alignItems:'center'
+    },
+    buttonContainerView: {
+        height: hp('6'),
+        width: wp('90'),
+        backgroundColor: '#525FE1',
+        borderRadius: wp('2.5'),
+        marginBottom:hp('5')
+    },
+    buttonText: {
+        fontSize: hp('1.89'),
+        fontWeight: 'bold',
+        color: 'white',
+        textAlign:'center',
+        marginTop:hp('1.5'),
+        letterSpacing:hp('.2')
     },
 })
