@@ -117,7 +117,7 @@ const styles = StyleSheet.create({
     },
     scoreValue: {
         fontSize: hp('2'),
-        fontFamily: 'Roboto-Bold',
+        fontFamily: 'Roboto-Black',
         alignSelf: 'center',
         color: '#213363',
     },

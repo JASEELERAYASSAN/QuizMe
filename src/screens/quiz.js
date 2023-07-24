@@ -19,28 +19,53 @@ export default function Quiz({ navigation }) {
     const [score, setScore] = useState(0);
     const [isLoading, setIsLoading] = useState(false);
 
-    const getQuiz = async (amount = 10, category = 18) => {
-        setIsLoading(true)
+    const [selectedCategoryIndex, setSelectedCategoryIndex] = useState(null);
+
+    const handleCategorySelect = (index) => {
+        setSelectedCategoryIndex(index)
+        getQuiz(categories[index].id)
+    };
+
+    const categories = [
+        { id: 9, name: 'General Knowledge' },
+        { id: 17, name: 'Science' },
+        { id: 18, name: 'Computer' },
+        { id: 19, name: 'Mathematics' },
+        { id: 21, name: 'Sports' },
+        { id: 22, name: 'Geography' },
+        { id: 23, name: 'History' },
+        { id: 25, name: 'Art' },
+        { id: 24, name: 'Politics' },
+    ];
+
+    const getQuiz = async (categoryId) => {
+        setIsLoading(true);
         try {
             const response = await api.get(baseURL, {
                 params: {
-                    amount,
-                    category,
+                    amount: 10,
+                    category: categoryId,
+                    difficulty: 'easy',
                     type: 'multiple',
                     encode: 'url3986',
-                }
-            })
-            setQuestions(response.data.results)
-            setOptions(generateOptionsAndShuffle(response.data.results[0]))
+                },
+            });
+            console.log('Hello', response.data.results);
+            setQuestions(response.data.results);
+            setOptions(generateOptionsAndShuffle(response.data.results[0]));
             setIsLoading(false);
         } catch (error) {
-            console.error('Error questions:', error);
+            console.error('Error fetching questions:', error);
+            setIsLoading(false);
         }
-    }
+    };
 
     useEffect(() => {
-        getQuiz();
-    }, []);
+        // Check if a category has been selected before fetching quiz questions
+        if (selectedCategoryIndex !== null) {
+            getQuiz(categories[selectedCategoryIndex].id);
+        }
+    }, [selectedCategoryIndex]); // Only fetch questions when selectedCategoryIndex changes
 
     const handleNextPress = () => {
         setQues(ques + 1);
@@ -68,14 +93,30 @@ export default function Quiz({ navigation }) {
     };
 
     const handleShowResult = () => {
-        navigation.navigate('Result', {
-            score: score,
-        });
+        if (selectedCategoryIndex !== null) {
+            navigation.navigate('Result', {
+                score: score,
+                category: categories[selectedCategoryIndex].name,
+            });
+        }
     };
 
     return (
+
         <View style={styles.container}>
-            {isLoading ? (
+            {selectedCategoryIndex === null ? (
+                <View style={styles.categoryCantainer}>
+                    <Text style={styles.categoryHeaderText}>Select a Category:</Text>
+                    {categories.map((category, index) => (
+                        <TouchableOpacity
+                            key={index}
+                            style={styles.categoryButton}
+                            onPress={() => handleCategorySelect(index)}>
+                            <Text style={styles.categoryText}>{category.name}</Text>
+                        </TouchableOpacity>
+                    ))}
+                </View>
+            ) : isLoading ? (
                 <View style={styles.spinningView}>
                     <SkypeIndicator color='#5C8984' size={50} />
                 </View>
@@ -146,13 +187,34 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
-        backgroundColor:'#EEE2DE'
+        backgroundColor: '#EEE2DE'
     },
-    backgroundImage: {
-        height: '100%',
-        width: '100%',
+    categoryCantainer: {
         justifyContent: 'center',
-        alignItems: 'center'
+        alignItems: 'center',
+        height: hp('100'),
+        width: wp('100'),
+        backgroundColor: '#EEE2DE'
+    },
+    categoryHeaderText: {
+        fontSize: hp('2'),
+        fontFamily: 'Roboto-Black',
+        color: '#27374D',
+        marginBottom: hp('4')
+    },
+    categoryButton: {
+        height: hp('5'),
+        width: wp('70'),
+        borderRadius: wp('2'),
+        backgroundColor: '#5C8984',
+        margin: hp(1),
+        justifyContent: 'center'
+    },
+    categoryText: {
+        fontSize: hp('1.69'),
+        textAlign: 'center',
+        color: 'white',
+        fontFamily: 'Roboto-Bold',
     },
     spinningView: {
         display: 'flex',
@@ -171,8 +233,8 @@ const styles = StyleSheet.create({
         width: wp('90'),
         alignItems: 'center',
         justifyContent: 'center',
-        backgroundColor:'#5C8984',
-        borderRadius:wp('2'),
+        backgroundColor: '#5C8984',
+        borderRadius: wp('2'),
         marginTop: hp('10'),
     },
     optContainerView: {
@@ -196,7 +258,7 @@ const styles = StyleSheet.create({
     },
     buttonText: {
         fontSize: hp('2'),
-        fontFamily: 'Roboto-Bold',        
+        fontFamily: 'Roboto-Bold',
         color: '#fff',
         marginTop: hp('1')
     },
@@ -204,7 +266,7 @@ const styles = StyleSheet.create({
         fontSize: hp('2'),
         fontFamily: 'Roboto-Bold',
         color: '#fff',
-        margin:hp('2')
+        margin: hp('2')
     },
     option: {
         fontSize: hp('2'),
